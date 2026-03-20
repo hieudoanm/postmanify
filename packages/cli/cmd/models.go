@@ -3,12 +3,12 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"free-router-cli/libs/openrouter"
 	"os"
 	"sort"
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/hieudoanm/free.router/libs/openrouter"
 	"github.com/spf13/cobra"
 )
 

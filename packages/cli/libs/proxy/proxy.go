@@ -4,18 +4,36 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"free-router-cli/libs/openrouter"
 	"io"
 	"net/http"
+	"strings"
+
+	"github.com/hieudoanm/free.router/libs/openrouter"
 )
 
 const upstreamURL = "https://openrouter.ai/api/v1/chat/completions"
 
+// AliasID returns a Cursor-safe model name by stripping the provider prefix
+// and the :free suffix, e.g. "arcee-ai/trinity-large-preview:free" → "trinity-large-preview".
+// Cursor rejects slashes and colons in model names.
+func AliasID(id string) string {
+	// drop provider prefix (everything up to and including the first "/")
+	if i := strings.Index(id, "/"); i >= 0 {
+		id = id[i+1:]
+	}
+	// drop :free (or any :<tag>) suffix
+	if i := strings.Index(id, ":"); i >= 0 {
+		id = id[:i]
+	}
+	return id
+}
+
 // NewHandler returns an http.Handler that:
-//   - GET  /v1/models              → returns the pinned model
-//   - POST /v1/chat/completions    → proxies to OpenRouter (streaming-safe)
+//   - GET  /v1/models              → returns the pinned model with a Cursor-safe alias
+//   - POST /v1/chat/completions    → accepts alias OR full ID, proxies to OpenRouter
 //   - Everything else              → 404
 func NewHandler(model *openrouter.Model, apiKey string) http.Handler {
+	alias := AliasID(model.ID)
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/v1/models", func(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +51,9 @@ func NewHandler(model *openrouter.Model, apiKey string) http.Handler {
 			"object": "list",
 			"data": []map[string]any{
 				{
-					"id":       model.ID,
+					// Expose the alias so Cursor accepts it, but also
+					// include the full id in a custom field for reference.
+					"id":       alias,
 					"object":   "model",
 					"owned_by": providerOf(model.ID),
 				},
@@ -54,7 +74,6 @@ func NewHandler(model *openrouter.Model, apiKey string) http.Handler {
 			return
 		}
 
-		// Read and parse the incoming body
 		rawBody, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, `{"error":"cannot read body"}`, http.StatusBadRequest)
@@ -67,11 +86,18 @@ func NewHandler(model *openrouter.Model, apiKey string) http.Handler {
 			return
 		}
 
-		// Pin the model to the free one
+		// Always pin the real OpenRouter model ID regardless of what
+		// Cursor sends (it will send the alias).
 		body["model"] = model.ID
-		body["provider"] = map[string]any{
-			"allow_fallbacks": true,
-			"data_collection": "allow",
+
+		// Tell OpenRouter to try all available providers and allow
+		// data collection — without this, rate-limited or privacy-
+		// restricted providers return 429/404 with no fallback.
+		if _, exists := body["provider"]; !exists {
+			body["provider"] = map[string]any{
+				"allow_fallbacks": true,
+				"data_collection": "allow",
+			}
 		}
 
 		upstreamBody, _ := json.Marshal(body)
@@ -79,8 +105,8 @@ func NewHandler(model *openrouter.Model, apiKey string) http.Handler {
 		req, _ := http.NewRequestWithContext(r.Context(), http.MethodPost, upstreamURL, bytes.NewReader(upstreamBody))
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", "Bearer "+apiKey)
-		req.Header.Set("HTTP-Referer", "https://github.com/hieudoanm/free.router")
-		req.Header.Set("X-Title", "fr")
+		req.Header.Set("HTTP-Referer", "https://github.com/freerouter/freerouter")
+		req.Header.Set("X-Title", "freerouter")
 
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
@@ -89,14 +115,12 @@ func NewHandler(model *openrouter.Model, apiKey string) http.Handler {
 		}
 		defer resp.Body.Close()
 
-		// Forward content-type and status
 		ct := resp.Header.Get("Content-Type")
 		if ct == "" {
 			ct = "application/json"
 		}
 		w.Header().Set("Content-Type", ct)
 
-		// SSE streaming: flush each chunk immediately
 		isStream := body["stream"] == true
 		if isStream {
 			w.Header().Set("Cache-Control", "no-cache")
@@ -144,11 +168,9 @@ func setCORS(w http.ResponseWriter) {
 }
 
 func providerOf(id string) string {
-	if i := len(id); i > 0 {
-		for j, c := range id {
-			if c == '/' {
-				return id[:j]
-			}
+	for j, c := range id {
+		if c == '/' {
+			return id[:j]
 		}
 	}
 	return "openrouter"

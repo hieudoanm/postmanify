@@ -4,10 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"free-router-cli/libs/config"
-	"free-router-cli/libs/openrouter"
-	"free-router-cli/libs/proxy"
-
 	"net"
 	"net/http"
 	"os"
@@ -15,6 +11,9 @@ import (
 	"syscall"
 
 	"github.com/fatih/color"
+	"github.com/hieudoanm/free.router/libs/config"
+	"github.com/hieudoanm/free.router/libs/openrouter"
+	"github.com/hieudoanm/free.router/libs/proxy"
 	"github.com/spf13/cobra"
 )
 
@@ -31,16 +30,16 @@ speaks the OpenAI Chat Completions API and proxies requests to OpenRouter
 using the specified free model. Cursor can connect to it as a custom model.
 
 The <model> argument supports fuzzy matching:
-  fr run llama-4-scout
-  fr run scout
-  fr run meta-llama/llama-4-scout:free`,
+  freerouter run llama-4-scout
+  freerouter run scout
+  freerouter run meta-llama/llama-4-scout:free`,
 	Args: cobra.ExactArgs(1),
 	RunE: runRun,
 }
 
 func init() {
 	runCmd.Flags().StringVarP(&runPort, "port", "p", "11434", "Port to listen on")
-	runCmd.Flags().StringVarP(&runKey, "key", "k", "", "OpenRouter API key (overrides OPENROUTER_API_KEY / ~/.fr)")
+	runCmd.Flags().StringVarP(&runKey, "key", "k", "", "OpenRouter API key (overrides OPENROUTER_API_KEY / ~/.freerouter)")
 }
 
 func runRun(cmd *cobra.Command, args []string) error {
@@ -56,8 +55,8 @@ func runRun(cmd *cobra.Command, args []string) error {
 		fmt.Fprintln(os.Stderr, color.New(color.Faint).Sprint(
 			"  Set it via:\n"+
 				"    • env var:  export OPENROUTER_API_KEY=sk-or-...\n"+
-				"    • file:     echo 'OPENROUTER_API_KEY=sk-or-...' > ~/.fr\n"+
-				"    • flag:     fr run <model> --key sk-or-..."))
+				"    • file:     echo 'OPENROUTER_API_KEY=sk-or-...' > ~/.freerouter\n"+
+				"    • flag:     freerouter run <model> --key sk-or-..."))
 		os.Exit(1)
 	}
 
@@ -72,7 +71,7 @@ func runRun(cmd *cobra.Command, args []string) error {
 	model := openrouter.ResolveModel(modelArg, freeModels)
 	if model == nil {
 		fmt.Fprint(os.Stderr, color.RedString("✖ Model %q not found in free models.\n", modelArg))
-		fmt.Fprintln(os.Stderr, color.New(color.Faint).Sprint("  Run `fr models` to see available models."))
+		fmt.Fprintln(os.Stderr, color.New(color.Faint).Sprint("  Run `freerouter models` to see available models."))
 		os.Exit(1)
 	}
 
@@ -85,6 +84,7 @@ func runRun(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("cannot bind to %s: %w", addr, err)
 	}
 
+	alias := proxy.AliasID(model.ID)
 	handler := proxy.NewHandler(model, apiKey)
 	srv := &http.Server{Handler: handler}
 
@@ -95,10 +95,11 @@ func runRun(cmd *cobra.Command, args []string) error {
 	yellow := color.New(color.FgYellow)
 
 	fmt.Println()
-	bold.Println("  🟢 fr is running!")
+	bold.Println("  🟢 freerouter is running!")
 	fmt.Println()
 	white.Print("  Model  ")
-	cyan.Println(model.ID)
+	cyan.Printf("%s", model.ID)
+	dim.Printf("  (alias: %s)\n", alias)
 	white.Print("  URL    ")
 	cyan.Printf("http://localhost:%s\n", runPort)
 	if model.ContextLength > 0 {
@@ -113,15 +114,16 @@ func runRun(cmd *cobra.Command, args []string) error {
 	white.Print("    Base URL : ")
 	yellow.Printf("http://localhost:%s/v1\n", runPort)
 	white.Print("    Model    : ")
-	yellow.Println(model.ID)
+	yellow.Println(alias)
+	dim.Printf("    (full ID : %s)\n", model.ID)
 	white.Print("    API Key  : ")
-	yellow.Println("fr")
+	yellow.Println("freerouter")
 
 	fmt.Println()
 	bold.Println("  ── Quick test ─────────────────────────────────────────")
 	dim.Printf("  curl http://localhost:%s/v1/chat/completions \\\n", runPort)
 	dim.Printf("    -H \"Content-Type: application/json\" \\\n")
-	dim.Printf("    -d '{\"model\":\"%s\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello!\"}]}'\n", model.ID)
+	dim.Printf("    -d '{\"model\":\"%s\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello!\"}]}'\n", alias)
 	fmt.Println()
 	dim.Println("  Press Ctrl+C to stop.")
 
@@ -131,7 +133,7 @@ func runRun(cmd *cobra.Command, args []string) error {
 
 	go func() {
 		<-sigCh
-		fmt.Println(color.YellowString("\n  Shutting down fr..."))
+		fmt.Println(color.YellowString("\n  Shutting down freerouter..."))
 		_ = srv.Shutdown(context.Background())
 	}()
 

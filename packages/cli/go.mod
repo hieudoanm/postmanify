@@ -1,4 +1,4 @@
-module free-router-cli
+module github.com/hieudoanm/free.router
 
 go 1.26.1
 

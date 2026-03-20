@@ -7,10 +7,9 @@ import (
 	"strings"
 	"sync"
 
-	"free-router-cli/libs/config"
-	"free-router-cli/libs/openrouter"
-
 	"github.com/fatih/color"
+	"github.com/hieudoanm/free.router/libs/config"
+	"github.com/hieudoanm/free.router/libs/openrouter"
 	"github.com/spf13/cobra"
 )
 

@@ -12,6 +12,7 @@ without any cost.
 ## Install
 
 ### Prerequisites
+
 - Go 1.23+
 - A free [OpenRouter](https://openrouter.ai) account + API key
 
@@ -58,6 +59,7 @@ freerouter models --json            # raw JSON output
 ```
 
 **Example output:**
+
 ```
 ✨ 42 free model(s) on OpenRouter
 
@@ -92,9 +94,10 @@ freerouter run deepseek-r1 --port 8080         # custom port
 | Flag     | Short | Default | Description                               |
 | -------- | ----- | ------- | ----------------------------------------- |
 | `--port` | `-p`  | `11434` | TCP port to bind (same default as Ollama) |
-| `--key`  | `-k`  | *(env)* | OpenRouter API key                        |
+| `--key`  | `-k`  | _(env)_ | OpenRouter API key                        |
 
 **Example output:**
+
 ```
 ✔ Model resolved: meta-llama/llama-4-scout:free
 
@@ -125,8 +128,8 @@ freerouter run deepseek-r1 --port 8080         # custom port
    | Field    | Value                          |
    | -------- | ------------------------------ |
    | Base URL | `http://localhost:11434/v1`    |
-   | Model    | *(model ID shown in terminal)* |
-   | API Key  | `freerouter` *(any string)*    |
+   | Model    | _(model ID shown in terminal)_ |
+   | API Key  | `freerouter` _(any string)_    |
 
 4. Select your new model from the model picker — done!
 
@@ -172,9 +175,10 @@ Cursor / Editor
  Free model  (Llama 4, DeepSeek R1, Gemma 3, …)
 ```
 
-- `models` → `GET https://openrouter.ai/api/v1/models`, filter `pricing.prompt == "0"`
-- `run` → binds a local `net/http` server; every `/v1/chat/completions` POST
-  is forwarded to OpenRouter with your key injected; SSE chunks are flushed
+- `models` → `GET https://openrouter.ai/api/v1/models`, filter
+  `pricing.prompt == "0"`
+- `run` → binds a local `net/http` server; every `/v1/chat/completions` POST is
+  forwarded to OpenRouter with your key injected; SSE chunks are flushed
   immediately so streaming feels instant in Cursor.
 
 ---
