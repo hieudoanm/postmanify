@@ -44,11 +44,11 @@ Free Router is a focused project in this monorepo that delivers a practical tool
 
 ### 🖥️ 5.1 Development Tools
 
-| No  | Group | Technology                 | GitHub              |
-| --- | ----- | -------------------------- | ------------------- |
-| 1   | IDE   | [Antigravity][antigravity] |                     |
-| 2   | IDE   | [Cursor][cursor]           | [GitHub][gh-cursor] |
-| 3   | Agent | [Claude][claude]           | [GitHub][gh-claude] |
+| No  | Group | Technology                 | GitHub              | Download                         |
+| --- | ----- | -------------------------- | ------------------- | -------------------------------- |
+| 1   | IDE   | [Antigravity][antigravity] |                     | [Download][download-antigravity] |
+| 2   | IDE   | [Cursor][cursor]           | [GitHub][gh-cursor] | [Download][download-cursor]      |
+| 3   | Agent | [Claude][claude]           | [GitHub][gh-claude] |                                  |
 
 ### ⚙️ 5.2 Monorepo
 
@@ -58,6 +58,10 @@ Free Router is a focused project in this monorepo that delivers a practical tool
 | 2   | Git Hooks    | [Husky][husky]         | [GitHub][gh-husky]     |
 | 3   | Build        | [Turborepo][turborepo] | [GitHub][gh-turborepo] |
 | 4   | Dependencies | [Renovate][renovate]   | [GitHub][gh-renovate]  |
+
+```bash
+pnpm install --save-dev --save-exact husky turbo 
+```
 
 ### 💻 5.3 Application
 
@@ -78,6 +82,28 @@ Free Router is a focused project in this monorepo that delivers a practical tool
 | 11  | Mobile           | [Capacitor.js][capacitorjs] | [GitHub][gh-capacitorjs] |
 | 12  | Hosting          | [GitHub Pages][githubpages] | [GitHub][gh-githubpages] |
 
+```bash
+# 1. Node.js
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+nvm install
+# 2. TypeScript
+pnpm install --save-dev --save-exact @types/node ts-node typescript
+# 3. Linter
+pnpm install --save-dev --save-exact eslint
+# 4. Formatter
+pnpm install --save-dev --save-exact prettier prettier-plugin-tailwindcss
+# 5. Testing
+pnpm install --save-dev --save-exact @types/jest jest jest-environment-jsdom ts-jest
+# 6. Styling
+pnpm install --save-dev --save-exact @tailwindcss/postcss tailwindcss daisyui
+# 7. Tauri
+pnpm install --save-exact @tauri-apps/api
+pnpm install --save-dev --save-exact @tauri-apps/cli
+# 8. Capacitor
+pnpm install --save-exact @capacitor/core @capacitor/android @capacitor/ios
+pnpm install --save-dev --save-exact @capacitor/cli
+```
+
 #### 📡 5.3.2 Back-end
 
 | No  | Group   | Technology                    | GitHub                    |
@@ -91,12 +117,35 @@ Free Router is a focused project in this monorepo that delivers a practical tool
 | 7   | Email   | [Resend][resend]              | [GitHub][gh-resend]       |
 | 8   | Payment | [Lemon Squeezy][lemonsqueezy] | [GitHub][gh-lemonsqueezy] |
 
+```bash
+# 1. tRPC
+pnpm install --save-dev --save-exact @trpc/server @trpc/client @trpc/react-query @trpc/next @tanstack/react-query@latest zod
+# 2. Prisma
+pnpm install --save-dev --save-exact prisma
+# 3. Redis
+pnpm install --save-exact redis
+# 4. Auth.js
+pnpm install --save-exact next-auth
+# 5. Email
+pnpm install --save-exact resend
+# 6. Payment
+pnpm install --save-exact @lemonsqueezy/lemonsqueezy.js
+```
+
 ### 📟 5.4 CLI (Command-line Interface)
 
-| No  | Group     | Technology       | GitHub              |
-| --- | --------- | ---------------- | ------------------- |
-| 1   | Language  | [Golang][golang] | [GitHub][gh-golang] |
-| 2   | Framework | [Cobra][cobra]   | [GitHub][gh-cobra]  |
+| No  | Group     | Technology       | GitHub                 |
+| --- | --------- | ---------------- | ---------------------- |
+| 1   | Language  | [Golang][golang] | [GitHub][gh-golang]    |
+| 2   | Framework | [Cobra][cobra]   | [GitHub][gh-cobra]     |
+| 3   | TUI       | BubbleTea        | [GitHub][gh-bubbletea] |
+
+```bash
+# 1. Cobra
+go get -u github.com/spf13/cobra@latest
+# OR
+go install github.com/spf13/cobra-cli@latest
+```
 
 ## 📄 6. License
 
@@ -110,6 +159,9 @@ Free Router is a focused project in this monorepo that delivers a practical tool
 
 [gh-cursor]: https://github.com/cursor/cursor
 [gh-claude]: https://github.com/anthropics/claude-code
+
+[download-antigravity]: https://antigravity.google/download
+[download-cursor]: https://cursor.com/download
 
 <!-- Monorepo -->
 
@@ -176,3 +228,4 @@ Free Router is a focused project in this monorepo that delivers a practical tool
 
 [gh-golang]: https://github.com/golang/go
 [gh-cobra]: https://github.com/spf13/cobra
+[gh-bubbletea]: https://github.com/charmbracelet/bubbletea
