@@ -3,8 +3,8 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-BIN_NAME="fr"
-REPO_URL="https://github.com/hieudoanm/free.router/raw/refs/heads/master/packages/cli/bin/fr"
+BIN_NAME="postmanify"
+REPO_URL="https://github.com/hieudoanm/postmanify/raw/refs/heads/master/packages/cli/bin/postmanify"
 INSTALL_DIR="/usr/local/bin"
 
 echo "Downloading $BIN_NAME..."

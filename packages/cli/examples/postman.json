@@ -1,0 +1,112 @@
+{
+  "info": {
+    "_postman_id": "auto-generated",
+    "description": "This is an **example** API to demonstrate features of the OpenAPI specification.\n# Introduction\nThis API definition is intended to to be a good starting point for describing your API in [OpenAPI/Swagger format](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.2.md).\nIt also demonstrates features of the [create-openapi-repo](https://github.com/Redocly/create-openapi-repo) tool and the [Redoc](https://github.com/Redocly/Redoc) documentation engine. Beyond the standard OpenAPI syntax, we use a few [vendor extensions](https://github.com/Redocly/Redoc/blob/main/docs/redoc-vendor-extensions.md).\n# OpenAPI Specification\nThe goal of The OpenAPI Specification is to define a standard, language-agnostic interface to REST APIs which allows both humans and computers to discover and understand the capabilities of the service without access to source code, documentation, or through network traffic inspection. When properly defined via OpenAPI, a consumer can understand and interact with the remote service with a minimal amount of implementation logic. Similar to what interfaces have done for lower-level programming, OpenAPI removes the guesswork in calling the service.\n",
+    "name": "Example API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "item": [
+        {
+          "name": "$REF /pathItem",
+          "request": {
+            "description": "",
+            "header": null,
+            "method": "$REF",
+            "url": {
+              "path": ["pathItem"],
+              "query": null,
+              "raw": "https://{tenant}/api/v1/pathItem",
+              "variable": null
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "$REF /pathItemWithExamples",
+          "request": {
+            "description": "",
+            "header": null,
+            "method": "$REF",
+            "url": {
+              "path": ["pathItemWithExamples"],
+              "query": null,
+              "raw": "https://{tenant}/api/v1/pathItemWithExamples",
+              "variable": null
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "$REF /echo",
+          "request": {
+            "description": "",
+            "header": null,
+            "method": "$REF",
+            "url": {
+              "path": ["echo"],
+              "query": null,
+              "raw": "https://{tenant}/api/v1/echo",
+              "variable": null
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "$REF /users/{username}",
+          "request": {
+            "description": "",
+            "header": null,
+            "method": "$REF",
+            "url": {
+              "path": ["users", "{username}"],
+              "query": null,
+              "raw": "https://{tenant}/api/v1/users/{username}",
+              "variable": null
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "$REF /user",
+          "request": {
+            "description": "",
+            "header": null,
+            "method": "$REF",
+            "url": {
+              "path": ["user"],
+              "query": null,
+              "raw": "https://{tenant}/api/v1/user",
+              "variable": null
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "$REF /user/list",
+          "request": {
+            "description": "",
+            "header": null,
+            "method": "$REF",
+            "url": {
+              "path": ["user", "list"],
+              "query": null,
+              "raw": "https://{tenant}/api/v1/user/list",
+              "variable": null
+            }
+          },
+          "response": []
+        }
+      ],
+      "name": "default"
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "type": "string",
+      "value": "https://{tenant}/api/v1"
+    }
+  ]
+}

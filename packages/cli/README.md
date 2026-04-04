@@ -1,8 +1,8 @@
-# 🚀 Free Router CLI
+# 🚀 Postmanify CLI
 
 ## 📚 Table of Contents
 
-- [🚀 Free Router CLI](#-free-router-cli)
+- [🚀 Postmanify CLI](#-postmanify-cli)
   - [📚 Table of Contents](#-table-of-contents)
   - [📦 Installation](#-installation)
   - [🚀 Usage](#-usage)
@@ -11,15 +11,13 @@
 ## 📦 Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hieudoanm/free.router/master/packages/cli/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/hieudoanm/postmanify/master/packages/cli/scripts/install.sh | bash
 ```
 
 ## 🚀 Usage
 
 ```bash
-fr models
-fr run <model>
-fr status
+postmanify convert -i examples/openapi.yaml -o examples/postman.json
 ```
 
 ## 📄 License

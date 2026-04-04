@@ -1,11 +1,11 @@
 .PHONY: lint format build install all
 
 BIN_DIR := bin
-BIN_NAME := free-router
+BIN_NAME := postmanify
 SRC := ./main.go
 
 VERSION := $(shell date +%Y.%m.%d.%H.%M.%S)
-LDFLAGS := -ldflags="-X 'github.com/hieudoanm/free.router/src/cmd.Version=$(VERSION)'"
+LDFLAGS := -ldflags="-X 'github.com/hieudoanm/postmanify/src/cmd.Version=$(VERSION)'"
 
 
 ## Commands
