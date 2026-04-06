@@ -32,7 +32,7 @@ jobs:
       - name: Test CLI
         run: go test ./...
       - name: Build CLI
-        run: go build ./...
+        run: make build
       - name: Delete old platform release
         if: github.ref == 'refs/heads/master'
         uses: dev-drprasad/delete-tag-and-release@v1.1
