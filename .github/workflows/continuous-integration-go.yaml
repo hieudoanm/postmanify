@@ -52,6 +52,6 @@ jobs:
           name: Latest CLI Release
           body: "Automated Build for CLI latest commit on master."
           files: |
-            packages/cli/bin/free.router
+            packages/cli/bin/postmanify
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
