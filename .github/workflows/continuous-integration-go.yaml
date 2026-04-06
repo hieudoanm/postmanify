@@ -51,7 +51,6 @@ jobs:
           tag_name: "cli-latest"
           name: Latest CLI Release
           body: "Automated Build for CLI latest commit on master."
-          prerelease: true
           files: |
             packages/cli/bin/free.router
         env:
