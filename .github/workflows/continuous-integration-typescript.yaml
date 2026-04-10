@@ -3,19 +3,54 @@ name: Continuous Integration (TypeScript)
 on:
   push:
     branches:
-      - "master"
-      - "develop"
-      - "hotfix/**"
-      - "feature/**"
-      - "renovate/**"
-      - "dependabot/**"
+      - 'master'
+      - 'develop'
+      - 'hotfix/**'
+      - 'feature/**'
+      - 'renovate/**'
+      - 'dependabot/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
 
 jobs:
-  ci:
-    name: Continuous Integration (${{ matrix.platform }})
+  # ── Lint & Test (runs once, on ubuntu only) ──────────────────────────────
+  quality:
+    name: Quality (lint + test)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+        with:
+          version: '10.33.0'
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '25.9.0'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Test
+        run: pnpm run test
+
+  # ── Build & Release (master only, all 3 platforms, after quality passes) ─
+  build:
+    name: Build (${{ matrix.platform }})
+    needs: quality
+    if: github.ref == 'refs/heads/master'
     runs-on: ${{ matrix.platform }}
     strategy:
       fail-fast: false
@@ -36,43 +71,37 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
       - name: Install pnpm
         uses: pnpm/action-setup@v5
         with:
-          version: "10.33.0"
+          version: '10.33.0'
+
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "25.9.0"
+          node-version: '25.9.0'
+          cache: 'pnpm'
+
       - name: Install Dependencies
         run: pnpm install
+
       - name: Install Linux Dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev
-      - name: Linting
-        run: pnpm run lint
-      - name: Test
-        run: pnpm run test
+
       - name: Build Production
         run: pnpm run build
         shell: bash
-      - name: Delete old platform release
-        if: github.ref == 'refs/heads/master'
-        uses: dev-drprasad/delete-tag-and-release@v1.1
-        with:
-          tag_name: ${{ matrix.platform }}
-          delete_release: true
-          github_token: ${{ secrets.GH_TOKEN }}
-        continue-on-error: true
-      - name: Create / Update platform release
-        if: github.ref == 'refs/heads/master'
+
+      - name: Create / Update Platform Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ matrix.platform }}
           name: ${{ matrix.platform }} Release
-          body: "Automated Build for ${{ matrix.platform }} latest commit on master."
+          body: 'Automated Build for ${{ matrix.platform }} latest commit on master.'
           draft: false
           prerelease: false
           overwrite: true
