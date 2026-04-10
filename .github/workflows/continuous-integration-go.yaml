@@ -3,19 +3,23 @@ name: Continuous Integration (Go)
 on:
   push:
     branches:
-      - "master"
-      - "develop"
-      - "hotfix/**"
-      - "feature/**"
-      - "renovate/**"
-      - "dependabot/**"
+      - 'master'
+      - 'develop'
+      - 'hotfix/**'
+      - 'feature/**'
+      - 'renovate/**'
+      - 'dependabot/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
 
 jobs:
-  ci:
-    name: Continuous Integration (Go)
+  quality:
+    name: Quality (lint + test)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,35 +27,55 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
       - name: Install Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.26.2"
+          go-version: '1.26.2'
           cache-dependency-path: packages/cli/go.sum
+
       - name: Install Dependencies
         run: go mod download
-      - name: Linting CLI
+
+      - name: Lint
         run: go vet ./...
-      - name: Test CLI
+
+      - name: Test
         run: go test ./...
-      - name: Build CLI
-        run: make build
-      - name: Delete old platform release
-        if: github.ref == 'refs/heads/master'
-        uses: dev-drprasad/delete-tag-and-release@v1.1
+
+  build:
+    name: Build (cli)
+    needs: quality
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/cli
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Go
+        uses: actions/setup-go@v6
         with:
-          tag_name: "cli-latest"
-          delete_release: true
-          github_token: ${{ secrets.GH_TOKEN }}
-        continue-on-error: true
-      - name: Create / Update platform release
-        if: github.ref == 'refs/heads/master'
+          go-version: '1.26.2'
+          cache-dependency-path: packages/cli/go.sum
+
+      - name: Install Dependencies
+        run: go mod download
+
+      - name: Build
+        run: make build
+
+      - name: Create / Update CLI Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "cli-latest"
+          tag_name: 'cli-latest'
           name: Latest CLI Release
-          body: "Automated Build for CLI latest commit on master."
-          files: |
-            packages/cli/bin/postmanify
+          body: 'Automated Build for CLI latest commit on master.'
+          draft: false
+          prerelease: false
+          overwrite: true
+          files: packages/cli/bin/*
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
