@@ -3,52 +3,126 @@
 exports[`VersionTemplate to match snapshot 1`] = `
 <div>
   <div
-    class="bg-base-200 flex min-h-screen items-center justify-center p-4 md:p-8"
+    class="bg-base-100 text-base-content relative flex min-h-screen items-center justify-center px-12 py-24"
+    data-theme="luxury"
   >
     <div
-      class="card bg-base-100 w-full max-w-md shadow-xl"
+      class="bg-primary/5 pointer-events-none absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+    />
+    <div
+      class="relative mx-auto w-full max-w-lg text-center"
     >
+      <p
+        class="text-primary mb-7 text-xs tracking-[0.2em] uppercase"
+      >
+        Current deployment
+      </p>
+      <h1
+        class="mb-4 font-serif text-5xl leading-[1.05] font-black tracking-tight"
+      >
+        App Version
+      </h1>
+      <p
+        class="text-base-content/60 mx-auto mb-11 max-w-sm text-base leading-relaxed"
+      >
+        Build version of the current deployment
+      </p>
       <div
-        class="card-body text-center"
+        class="card bg-base-200 border-base-300 mb-8 border"
       >
         <div
-          class="flex flex-col gap-y-4"
+          class="card-body p-7"
         >
-          <h1
-            class="text-4xl font-bold"
-          >
-            App Version
-          </h1>
-          <p
-            class="text-base-content/70"
-          >
-            Build version of the current deployment
-          </p>
           <div
-            class="bg-base-200 rounded-lg p-4 font-mono text-lg break-all"
+            class="flex items-center justify-center gap-0"
           >
-            0.0.0
-          </div>
-          <div
-            class="card-actions justify-center gap-2"
-          >
-            <button
-              class="btn btn-sm btn-outline"
+            <div
+              class="flex flex-col items-center px-5"
             >
-              Copy
-            </button>
-          </div>
-          <p
-            class="text-base-content/50 text-sm"
-          >
-            Format: 
-            <kbd
-              class="kbd kbd-sm"
+              <span
+                class="text-primary font-mono text-3xl font-bold"
+              >
+                0
+              </span>
+              <span
+                class="text-base-content/30 mt-1 text-[11px] tracking-widest uppercase"
+              >
+                Year
+              </span>
+            </div>
+            <span
+              class="text-base-content/20 font-mono text-2xl"
             >
-              YYYY.MM.DD.hh.mm.ss
-            </kbd>
-          </p>
+              .
+            </span>
+            <div
+              class="flex flex-col items-center px-5"
+            >
+              <span
+                class="font-mono text-3xl font-bold"
+              >
+                0
+              </span>
+              <span
+                class="text-base-content/30 mt-1 text-[11px] tracking-widest uppercase"
+              >
+                Month
+              </span>
+            </div>
+            <span
+              class="text-base-content/20 font-mono text-2xl"
+            >
+              .
+            </span>
+            <div
+              class="flex flex-col items-center px-5"
+            >
+              <span
+                class="font-mono text-3xl font-bold"
+              >
+                0
+              </span>
+              <span
+                class="text-base-content/30 mt-1 text-[11px] tracking-widest uppercase"
+              >
+                Day
+              </span>
+            </div>
+          </div>
         </div>
+      </div>
+      <div
+        class="mb-10 flex flex-wrap justify-center gap-3"
+      >
+        <button
+          class="btn btn-primary"
+        >
+          Copy version
+        </button>
+        <button
+          class="btn btn-ghost font-mono text-sm"
+        >
+          0.0.0
+        </button>
+      </div>
+      <div
+        class="flex flex-wrap justify-center gap-3"
+      >
+        <span
+          class="badge badge-ghost border-base-300 text-base-content/40 gap-1.5 border"
+        >
+          Format:
+          <kbd
+            class="kbd kbd-xs"
+          >
+            YYYY.MM.DD.hh.mm.ss
+          </kbd>
+        </span>
+        <span
+          class="badge badge-neutral"
+        >
+          Stable
+        </span>
       </div>
     </div>
   </div>
