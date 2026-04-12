@@ -68,7 +68,7 @@ jobs:
         run: make build
 
       - name: Create / Update CLI Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: 'cli-latest'
           name: Latest CLI Release
