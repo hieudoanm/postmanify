@@ -46,7 +46,7 @@
     "@silvia-odwyer/photon": "0.3.3",
     "@tanstack/react-query": "5.99.0",
     "@tanstack/react-table": "8.21.3",
-    "@tanstack/react-virtual": "3.13.23",
+    "@tanstack/react-virtual": "3.13.24",
     "@tauri-apps/api": "2.10.1",
     "@trpc/client": "11.16.0",
     "@trpc/next": "11.16.0",
