@@ -18,7 +18,7 @@
   },
   "author": "hieudoanm <hieumdoan@gmail.com> (https://hieudoanm.github.io/)",
   "license": "GPL-3.0",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@10.33.1",
   "engines": {
     "node": "25.9.0"
   },
